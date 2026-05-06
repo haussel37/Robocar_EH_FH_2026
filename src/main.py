@@ -38,7 +38,7 @@ def motor(input1, input2, speed):
     # Rückwärts
     elif speed < 0:
         pca.channels[input1].duty_cycle = 0
-        pca.channels[in2].duty_cycle = value
+        pca.channels[input2].duty_cycle = value
 
     # Stop
     else:
@@ -82,24 +82,15 @@ if __name__ == "__main__":
 
     try:
 
-        print("Front Left")
-        front_left(10)
-        time.sleep(3)
-        stop_all()
+        print("Alle Räder fahren gleichzeitig")
 
-        print("Front Right")
-        front_right(10)
-        time.sleep(3)
-        stop_all()
+        front_left(40)
+        front_right(40)
+        rear_left(40)
+        rear_right(40)
 
-        print("Rear Left")
-        rear_left(10)
-        time.sleep(3)
-        stop_all()
+        time.sleep(1)
 
-        print("Rear Right")
-        rear_right(10)
-        time.sleep(3)
         stop_all()
 
     except KeyboardInterrupt:
