@@ -79,20 +79,17 @@ def motor(input1, input2, speed):
 
 
 
+
+
+
 if __name__ == "__main__":
+    front_left(30)
+    front_right(30)
+    rear_left(30)
+    rear_right(30)
 
-    try:
+    time.sleep(1)
 
-        print("Alle Räder fahren gleichzeitig")
+    stop_all()
 
-        front_left(25)
-        front_right(25)
-        rear_left(25)
-        rear_right(25)
-
-        time.sleep(2)
-
-        stop_all()
-
-    except KeyboardInterrupt:
-        stop_all()
+    print("Test beendet")
