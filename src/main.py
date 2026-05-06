@@ -1,6 +1,107 @@
-from gpiozero import Buzzer
-from time import sleep
+import board
+import time
+from adafruit_pca9685 import PCA9685
 
-bz = Buzzer(17)
-bz.off()
-sleep(1)
+i2c = board.I2C()
+pca = PCA9685(i2c)
+
+pca.frequency = 1000
+
+# motor channels ansteuern (die pins)
+front_left_input1 = 0
+front_left_input2 = 1
+
+front_right_input1 = 2
+front_right_input2 = 3
+
+rear_left_input1 = 4
+rear_left_input2 = 5
+
+rear_rigth_input1 = 6
+rear_rigth_input2 = 7
+
+# PWM UMWANDLUNG
+def pwm(speed):
+    return int((abs(speed) / 100) * 65535)
+
+
+# einzelne Motor ansteuern
+def motor(input1, input2, speed):
+
+    value = pwm(speed)
+
+    # Vorwärts
+    if speed > 0:
+        pca.channels[input1].duty_cycle = value
+        pca.channels[input2].duty_cycle = 0
+
+    # Rückwärts
+    elif speed < 0:
+        pca.channels[input1].duty_cycle = 0
+        pca.channels[in2].duty_cycle = value
+
+    # Stop
+    else:
+        pca.channels[input1].duty_cycle = 0
+        pca.channels[input2].duty_cycle = 0
+
+
+# =====================================================
+# EINZELNE RÄDER
+# =====================================================
+
+def front_left(speed):
+    # invertiert
+    motor(front_left_input1, front_left_input2, -speed)
+
+
+def front_right(speed):
+    motor(front_right_input1, front_right_input2, speed)
+
+
+def rear_left(speed):
+    motor(rear_left_input1, rear_left_input2, -speed)
+
+
+def rear_right(speed):
+    # invertiert
+    motor(rear_rigth_input1, rear_rigth_input2, speed)
+
+
+def stop_all():
+
+    for i in range(8):
+        pca.channels[i].duty_cycle = 0
+
+
+# =====================================================
+# TEST DER EINZELNEN RÄDER
+# =====================================================
+
+if __name__ == "__main__":
+
+    try:
+
+        print("Front Left")
+        front_left(10)
+        time.sleep(3)
+        stop_all()
+
+        print("Front Right")
+        front_right(10)
+        time.sleep(3)
+        stop_all()
+
+        print("Rear Left")
+        rear_left(10)
+        time.sleep(3)
+        stop_all()
+
+        print("Rear Right")
+        rear_right(10)
+        time.sleep(3)
+        stop_all()
+
+    except KeyboardInterrupt:
+        stop_all()
+      

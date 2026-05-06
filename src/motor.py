@@ -11,10 +11,12 @@ pca = PCA9685(i2c)
 
 current_speed_front_left = 50
 current_speed_front_right = 50
-current_speed_rear_left = 5
+current_speed_rear_left = 50
 current_speed_rear_right = 50
 
 pca.frequency = 50
+
+pca.channels[0].duty_cycle = 50
 
 
 
