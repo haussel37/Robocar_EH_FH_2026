@@ -1,0 +1,6 @@
+{
+    "speed_straight": 20,
+    "speed_forward": 20,
+    "speed_back": -20,
+    "black_line": 1
+}

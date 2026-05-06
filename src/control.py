@@ -1,68 +1,77 @@
-import board
 from time import sleep
-from adafruit_pca9685 import PCA9685
 import motor2
 import sensor
+import json
+import os
+
+#Bibliothek von json laden
+script_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(script_dir, "config.json")
+
+#bibliothek json öffnen
+with open(config_path, "r") as file:
+    config = json.load(file)
 
 # Sensoren
 sensor_right = sensor.sensor_right
 sensor_center = sensor.sensor_center
 sensor_left = sensor.sensor_left
 
-speed = 20
-speed_1 = 30
-speed_2 = -15
+def drive_straight():
+    motor2.front_left(config["speed_straight"])
+    motor2.front_right(config["speed_straight"])
+    motor2.rear_left(config["speed_straight"])
+    motor2.rear_right(config["speed_straight"])
+
+def turn_right():
+    motor2.front_left(config["speed_back"])
+    motor2.front_right(config["speed_forward"])
+    motor2.rear_left(config["speed_back"])
+    motor2.rear_right(config["speed_forward"])
+
+def turn_left():
+    motor2.front_left(config["speed_forward"])
+    motor2.front_right(config["speed_back"])
+    motor2.rear_left(config["speed_forward"])
+    motor2.rear_right(config["speed_back"])
+
 
 #Variable zuordnen
 last_seen_line = "sensor_mitte"
 
 def control_run():
-    while True:
-        if sensor_center.value == 1:
-            motor2.front_left(speed)
-            motor2.front_right(speed)
-            motor2.rear_left(speed)
-            motor2.rear_right(speed)
-            #Variable zuordnen
-            last_seen_line = "sensor_mitte"
+    try:
+        global last_seen_line
+        while True:
+            if sensor_center.value == config["black_line"]:
+                drive_straight()
+                #Variable neu zuordnen
+                last_seen_line = "sensor_mitte"
 
-        elif sensor_right.value == 1:
-            motor2.front_left(speed_2)
-            motor2.front_right(speed_1)
-            motor2.rear_left(speed_2)
-            motor2.rear_right(speed_1)
-            #Variable zuordnen
-            last_seen_line = "sensor_rechts"
+            elif sensor_right.value == config["black_line"]:
+                turn_right()
+                #Variable neu zuordnen
+                last_seen_line = "sensor_rechts"
 
 
-        elif sensor_left.value == 1:
-            motor2.front_left(speed_1)
-            motor2.front_right(speed_2)
-            motor2.rear_left(speed_1)
-            motor2.rear_right(speed_2)
-            #Variable zuordnen
-            last_seen_line = "sensor_links"
-
-        else:
-            # keine Linie erkannt -> in letzter Richtung suchen
-            if last_seen_line == "sensor_rechts":
-                motor2.front_left(speed_2)
-                motor2.front_right(speed_1)
-                motor2.rear_left(speed_2)
-                motor2.rear_right(speed_1)
-
-
-            elif last_seen_line == "sensor_links":
-                motor2.front_left(speed_1)
-                motor2.front_right(speed_2)
-                motor2.rear_left(speed_1)
-                motor2.rear_right(speed_2)
+            elif sensor_left.value == config["black_line"]:
+                turn_left()
+                #Variable neu zuordnen
+                last_seen_line = "sensor_links"
 
             else:
-                # last_seen_line == "sensor_mitte"
-                motor2.front_left(speed)
-                motor2.front_right(speed)
-                motor2.rear_left(speed)
-                motor2.rear_right(speed)
+                # keine Linie erkannt -> in letzter Richtung suchen
+                if last_seen_line == "sensor_rechts":
+                    turn_right()
 
-        sleep(0.05)
+
+                elif last_seen_line == "sensor_links":
+                    turn_left()
+
+                else:
+                    # last_seen_line == "sensor_mitte"
+                    drive_straight()
+
+            sleep(0.05)
+    except KeyboardInterrupt:
+        motor2.stop_all()
