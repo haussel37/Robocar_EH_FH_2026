@@ -6,6 +6,7 @@ import os
 
 # Pfad zum aktuellen Skript ermitteln
 script_dir = os.path.dirname(os.path.abspath(__file__))
+
 # Pfad zur Konfigurationsdatei zusammensetzen
 config_path = os.path.join(script_dir, "config.json")
 
@@ -46,18 +47,15 @@ def control_run():
         while True:
             if sensor_center.value == config["black_line"]:
                 drive_straight()
-                # Variable neu zuordnen
                 last_seen_line = "sensor_center"
 
             elif sensor_right.value == config["black_line"]:
                 turn_right()
-                # Variable neu zuordnen
                 last_seen_line = "sensor_right"
 
 
             elif sensor_left.value == config["black_line"]:
                 turn_left()
-                # Variable neu zuordnen
                 last_seen_line = "sensor_left"
 
             else:
@@ -65,12 +63,15 @@ def control_run():
                 if last_seen_line == "sensor_right":
                     turn_right()
 
+                elif last_seen_line == "sensor_left" and "sensor_center":
+                    turn_left()
+
+                elif last_seen_line == "sensor_right" and "sensor_center":
+                    turn_right()
 
                 elif last_seen_line == "sensor_left":
                     turn_left()
-
                 else:
-                    # last_seen_line == "sensor_center"
                     drive_straight()
 
             sleep(config["time_loop"])

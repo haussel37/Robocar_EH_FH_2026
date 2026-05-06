@@ -35,7 +35,7 @@ def pwm(speed):
     return int((abs(speed) / config["max_speed"]) * config["max_PWM"])
 
 
-# funktionen für die einzelnen Räder/Motoren
+# Funktionen für die einzelnen Räder/Motoren
 def front_left(speed):
     # invertiert
     motor(front_left_input1, front_left_input2, -speed)
