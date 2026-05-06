@@ -25,7 +25,33 @@ def pwm(speed):
     return int((abs(speed) / 100) * 65535)
 
 
-# einzelne Motor ansteuern
+# funktionen für die einzelnen Räder/Motoren
+def front_left(speed):
+    # invertiert
+    motor(front_left_input1, front_left_input2, -speed)
+
+
+def front_right(speed):
+    motor(front_right_input1, front_right_input2, speed)
+
+
+def rear_left(speed):
+     # invertiert
+    motor(rear_left_input1, rear_left_input2, -speed)
+
+
+def rear_right(speed):
+    motor(rear_rigth_input1, rear_rigth_input2, speed)
+
+
+def stop_all():
+
+    for i in range(8):
+        pca.channels[i].duty_cycle = 0
+        
+        
+
+# Motor ansteuern
 def motor(input1, input2, speed):
 
     value = pwm(speed)
@@ -46,37 +72,6 @@ def motor(input1, input2, speed):
         pca.channels[input2].duty_cycle = 0
 
 
-# =====================================================
-# EINZELNE RÄDER
-# =====================================================
-
-def front_left(speed):
-    # invertiert
-    motor(front_left_input1, front_left_input2, -speed)
-
-
-def front_right(speed):
-    motor(front_right_input1, front_right_input2, speed)
-
-
-def rear_left(speed):
-    motor(rear_left_input1, rear_left_input2, -speed)
-
-
-def rear_right(speed):
-    # invertiert
-    motor(rear_rigth_input1, rear_rigth_input2, speed)
-
-
-def stop_all():
-
-    for i in range(8):
-        pca.channels[i].duty_cycle = 0
-
-
-# =====================================================
-# TEST DER EINZELNEN RÄDER
-# =====================================================
 
 if __name__ == "__main__":
 
