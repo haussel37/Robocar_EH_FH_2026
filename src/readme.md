@@ -7,6 +7,32 @@ Der Roboter erkennt mit drei Liniensensoren eine schwarze Linie auf hellem Unter
 
 Die Sensorwerte werden kontinuierlich ausgewertet, um die Fahrtrichtung anzupassen und die Linie zu verfolgen.
 
+## Bang-Bang-Steuerung
+Der Linienfolger verwendet eine sogenannte Bang-Bang-Steuerung.
+
+Bei dieser Steuerungsart gibt es keine stufenlose Regelung der Motorgeschwindigkeit. Stattdessen werden feste Fahrbefehle abhängig von den Sensorzuständen ausgeführt.
+
+Die Steuerung kennt nur wenige Zustände:
+
+- Geradeaus fahren
+- Nach links korrigieren
+- Nach rechts korrigieren
+- Linie suchen
+
+Sobald ein Sensor die Linie erkennt, wird sofort die zugehörige Aktion ausgeführt. Die Motoren wechseln dabei direkt zwischen den vorgegebenen Zuständen, ohne Zwischenwerte zu berechnen.
+
+Vorteile:
+- Einfache Implementierung
+- Geringer Rechenaufwand
+- Gut geeignet für einfache Linienfolger
+
+Nachteile:
+- Unruhigeres Fahrverhalten
+- Geringere Genauigkeit in Kurven
+- Keine automatische Anpassung an unterschiedliche Geschwindigkeiten
+
+Im Gegensatz zu einem PID-Regler berücksichtigt die Bang-Bang-Steuerung nur den aktuellen Sensorzustand und nicht die Stärke oder Dauer einer Abweichung von der Linie.
+
 ## Verwendete Hardware
 - Raspberry Pi
 - PCA9685 PWM-Modul
@@ -25,9 +51,11 @@ Startpunkt des Programms.
 #### Aufgabe:
 - Importiert die Steuerlogik
 - Startet das Hauptprogramm
-`import control`
+```python
+import control
 
-`control.control_run()`
+control.control_run()
+```
 
 ### control.py
 Enthält die Fahrlogik des Roboters.
@@ -88,9 +116,9 @@ Wenn der mittlere Sensor die Linie erkennt:
 
 `0 1 0`
 
-### fährt der Roboter geradeaus.
+fährt der Roboter geradeaus.
 
-Linkskorrektur
+### Linkskorrektur
 Wenn der rechte Sensor die Linie erkennt:
 
 `0 0 1`
@@ -114,8 +142,7 @@ sucht der Roboter die Linie anhand der zuletzt bekannten Position.
 ## Projektstruktur
 
 ```text
-Projekt
-│
+.
 ├── main.py
 ├── control.py
 ├── motor2.py
@@ -127,12 +154,14 @@ Projekt
 ## Installation
 Benötigte Bibliotheken installieren:
 ```bash
-pip install gpiozero
-pip install adafruit-circuitpython-pca9685
-pip install adafruit-blinka
+python3 -m pip install gpiozero
+python3 -m pip install adafruit-circuitpython-pca9685
+python3 -m pip install adafruit-blinka
 ```
 ## Programm starten
-`python3 main.py`
+```bash
+python3 main.py
+```
 ## Programm beenden
 `STRG + C`
 
@@ -148,7 +177,8 @@ Beim Beenden werden alle Motoren gestoppt.
 
 ## Autor
 
-Name: Ellen Haußmann und Felix Haußmann
+- Ellen Haußmann
+- Felix Haußmann
 
 Studiengang: TMT 2025
 
