@@ -5,6 +5,8 @@ from adafruit_pca9685 import PCA9685
 i2c = board.I2C()
 pca = PCA9685(i2c)
 
+pca.frequency = 1000
+
 # motor channels ansteuern (die pins)
 front_left_input1 = 0
 front_left_input2 = 1
@@ -17,8 +19,6 @@ rear_left_input2 = 5
 
 rear_rigth_input1 = 6
 rear_rigth_input2 = 7
-
-pca.frequency = 1000
 
 # PWM UMWANDLUNG
 def pwm(speed):
@@ -90,4 +90,5 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         stop_all()
+    
       
