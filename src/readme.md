@@ -53,7 +53,7 @@ Verwaltet die Liniensensoren.
 | sensor_center | mitte |
 | sensor_right | rechts |
 
-### motor.py
+### motor2.py
 Steuert die vier Motoren über das PCA9685-Modul.
 
 #### Aufgaben:
@@ -86,28 +86,28 @@ Der Roboter verwendet drei Liniensensoren.
 ### Geradeausfahrt
 Wenn der mittlere Sensor die Linie erkennt:
 
-0 1 0
+`0 1 0`
 
 ### fährt der Roboter geradeaus.
 
 Linkskorrektur
 Wenn der rechte Sensor die Linie erkennt:
 
-0 0 1
+`0 0 1`
 
 lenkt der Roboter nach links.
 
 ### Rechtskorrektur
 Wenn der linke Sensor die Linie erkennt:
 
-1 0 0
+`1 0 0`
 
 lenkt der Roboter nach rechts.
 
 ### Linienverlust
 Wenn kein Sensor die Linie erkennt:
 
-0 0 0
+`0 0 0`
 
 sucht der Roboter die Linie anhand der zuletzt bekannten Position.
 
@@ -148,9 +148,9 @@ Beim Beenden werden alle Motoren gestoppt.
 
 ## Autor
 
-Name: [Ellen Haußmann und Felix Haußmann]
+Name: Ellen Haußmann und Felix Haußmann
 
-Studiengang: [TMT 2025]
+Studiengang: TMT 2025
 
 Projekt: Linienfolgender Roboter mit Raspberry Pi
 
