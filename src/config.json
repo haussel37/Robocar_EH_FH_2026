@@ -2,5 +2,20 @@
     "speed_straight": 20,
     "speed_forward": 20,
     "speed_back": -20,
-    "black_line": 1
+    "black_line": 1,
+    "time_loop": 0.05,
+    "frequency": 100,
+    "channel_front_left_input1": 0,
+    "channel_front_left_input2": 1,
+    "channel_front_right_input1": 6,
+    "channel_front_right_input2": 7,
+    "channel_rear_left_input1": 2,
+    "channel_rear_left_input2": 3,
+    "channel_rear_right_input1": 4,
+    "channel_rear_right_input2": 5,
+    "max_speed": 100,
+    "max_PWM": 65535,
+    "channel_sensor_right": 14,
+    "channel_sensor_left": 23,
+    "channel_sensor_center": 15
 }

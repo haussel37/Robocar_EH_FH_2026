@@ -4,11 +4,12 @@ import sensor
 import json
 import os
 
-#Bibliothek von json laden
+# Pfad zum aktuellen Skript ermitteln
 script_dir = os.path.dirname(os.path.abspath(__file__))
+# Pfad zur Konfigurationsdatei zusammensetzen
 config_path = os.path.join(script_dir, "config.json")
 
-#bibliothek json öffnen
+# JSON-Datei öffnen und Inhalt laden
 with open(config_path, "r") as file:
     config = json.load(file)
 
@@ -36,8 +37,8 @@ def turn_left():
     motor2.rear_right(config["speed_back"])
 
 
-#Variable zuordnen
-last_seen_line = "sensor_mitte"
+# Variable zuordnen
+last_seen_line = "sensor_center"
 
 def control_run():
     try:
@@ -45,33 +46,33 @@ def control_run():
         while True:
             if sensor_center.value == config["black_line"]:
                 drive_straight()
-                #Variable neu zuordnen
-                last_seen_line = "sensor_mitte"
+                # Variable neu zuordnen
+                last_seen_line = "sensor_center"
 
             elif sensor_right.value == config["black_line"]:
                 turn_right()
-                #Variable neu zuordnen
-                last_seen_line = "sensor_rechts"
+                # Variable neu zuordnen
+                last_seen_line = "sensor_right"
 
 
             elif sensor_left.value == config["black_line"]:
                 turn_left()
-                #Variable neu zuordnen
-                last_seen_line = "sensor_links"
+                # Variable neu zuordnen
+                last_seen_line = "sensor_left"
 
             else:
                 # keine Linie erkannt -> in letzter Richtung suchen
-                if last_seen_line == "sensor_rechts":
+                if last_seen_line == "sensor_right":
                     turn_right()
 
 
-                elif last_seen_line == "sensor_links":
+                elif last_seen_line == "sensor_left":
                     turn_left()
 
                 else:
-                    # last_seen_line == "sensor_mitte"
+                    # last_seen_line == "sensor_center"
                     drive_straight()
 
-            sleep(0.05)
+            sleep(config["time_loop"])
     except KeyboardInterrupt:
         motor2.stop_all()

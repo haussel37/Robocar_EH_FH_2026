@@ -1,33 +1,16 @@
 from gpiozero import LineSensor
-from time import sleep
-import motor2
+import json
+import os
 
-sensor1 = LineSensor(14)
-sensor2 = LineSensor(15)
-sensor3 = LineSensor(23)
+# Pfad zum aktuellen Skript ermitteln
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Pfad zur Konfigurationsdatei zusammensetzen
+config_path = os.path.join(script_dir, "config.json")
 
-# Sensor rechts
-sensor_right = sensor1
-# Sensor mitte
-sensor_center = sensor2
-# Sensor links
-sensor_left = sensor3
+# JSON-Datei öffnen und Inhalt laden
+with open(config_path, "r") as file:
+    config = json.load(file)
 
-def line_center_detected():
-    motor2.front_left(20)
-    motor2.front_right(20)
-    motor2.rear_left(20)
-    motor2.rear_right(20)
-
-def line_right_detected():
-
-    motor2.front_left(-20)
-    motor2.front_right(30)
-    motor2.rear_left(30)
-    motor2.rear_right(-20)
-
-def line_left_detected():
-    motor2.front_left(30)
-    motor2.front_right(-20)
-    motor2.rear_left(-20)
-    motor2.rear_right(30)
+sensor_right = LineSensor(config["channel_sensor_right"])
+sensor_center = LineSensor(config["channel_sensor_center"])
+sensor_left = LineSensor(config["channel_sensor_left"])

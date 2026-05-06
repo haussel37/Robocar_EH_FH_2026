@@ -1,28 +1,38 @@
 import board
-import time
 from adafruit_pca9685 import PCA9685
+import json
+import os
+
+# Pfad zum aktuellen Skript ermitteln
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Pfad zur Konfigurationsdatei zusammensetzen
+config_path = os.path.join(script_dir, "config.json")
+
+# JSON-Datei öffnen und Inhalt laden
+with open(config_path, "r") as file:
+    config = json.load(file)
 
 i2c = board.I2C()
 pca = PCA9685(i2c)
 
-pca.frequency = 100
+pca.frequency = config["frequency"]
 
 # motor channels ansteuern (die pins)
-front_left_input1 = 0
-front_left_input2 = 1
+front_left_input1 = config["channel_front_left_input1"]
+front_left_input2 = config["channel_front_left_input2"]
 
-front_right_input1 = 6
-front_right_input2 = 7
+front_right_input1 = config["channel_front_right_input1"]
+front_right_input2 = config["channel_front_right_input2"]
 
-rear_left_input1 = 2
-rear_left_input2 = 3
+rear_left_input1 = config["channel_rear_left_input1"]
+rear_left_input2 = config["channel_rear_left_input2"]
 
-rear_rigth_input1 = 4
-rear_rigth_input2 = 5
+rear_right_input1 = config["channel_rear_right_input1"]
+rear_right_input2 = config["channel_rear_right_input2"]
 
 # PWM UMWANDLUNG
 def pwm(speed):
-    return int((abs(speed) / 100) * 65535)
+    return int((abs(speed) / config["max_speed"]) * config["max_PWM"])
 
 
 # funktionen für die einzelnen Räder/Motoren
@@ -41,55 +51,37 @@ def rear_left(speed):
 
 def rear_right(speed):
     # invertiert
-    motor(rear_rigth_input1, rear_rigth_input2, -speed)
+    motor(rear_right_input1, rear_right_input2, -speed)
 
 
 def stop_all():
-    pca.channels[0].duty_cycle = 0
-    pca.channels[1].duty_cycle = 0
-    pca.channels[2].duty_cycle = 0
-    pca.channels[3].duty_cycle = 0
-    pca.channels[4].duty_cycle = 0
-    pca.channels[5].duty_cycle = 0
-    pca.channels[6].duty_cycle = 0
-    pca.channels[7].duty_cycle = 0
-    pca.channels[8].duty_cycle = 0
+    motor_channels = [
+        front_left_input1,
+        front_left_input2,
+        front_right_input1,
+        front_right_input2,
+        rear_left_input1,
+        rear_left_input2,
+        rear_right_input1,
+        rear_right_input2
+    ]
 
-
+    for channel in motor_channels:
+        pca.channels[channel].duty_cycle = 0
 
 # Motor ansteuern
 def motor(input1, input2, speed):
 
     value = pwm(speed)
 
-    # Vorwärts
     if speed > 0:
         pca.channels[input1].duty_cycle = value
         pca.channels[input2].duty_cycle = 0
 
-    # Rückwärts
     elif speed < 0:
         pca.channels[input1].duty_cycle = 0
         pca.channels[input2].duty_cycle = value
 
-    # Stop
     else:
         pca.channels[input1].duty_cycle = 0
         pca.channels[input2].duty_cycle = 0
-
-
-
-
-
-
-if __name__ == "__main__":
-    front_left(30)
-    front_right(30)
-    rear_left(30)
-    rear_right(30)
-
-    time.sleep(1)
-
-    stop_all()
-
-    print("Test beendet")
