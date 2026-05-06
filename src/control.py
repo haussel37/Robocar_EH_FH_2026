@@ -13,38 +13,35 @@ speed = 20
 speed_1 = 30
 speed_2 = -15
 
+#Variable zuordnen
 last_seen_line = "sensor_mitte"
 
 def control_run():
     while True:
-        right = sensor_right.value
-        center = sensor_center.value
-        left = sensor_left.value
-
-        if center == 1:
-            last_seen_line = "sensor_mitte"
-        # geradeaus fahren
+        if sensor_center.value == 1:
             motor2.front_left(speed)
             motor2.front_right(speed)
             motor2.rear_left(speed)
             motor2.rear_right(speed)
+            #Variable zuordnen
+            last_seen_line = "sensor_mitte"
 
-        elif right == 1:
-            last_seen_line = "sensor_rechts"
-        # nach rechts lenken
+        elif sensor_right.value == 1:
             motor2.front_left(speed_2)
             motor2.front_right(speed_1)
             motor2.rear_left(speed_2)
             motor2.rear_right(speed_1)
+            #Variable zuordnen
+            last_seen_line = "sensor_rechts"
 
 
-        elif left == 1:
-            last_seen_line = "sensor_links"
-            # nach links lenken
+        elif sensor_left.value == 1:
             motor2.front_left(speed_1)
             motor2.front_right(speed_2)
             motor2.rear_left(speed_1)
             motor2.rear_right(speed_2)
+            #Variable zuordnen
+            last_seen_line = "sensor_links"
 
         else:
             # keine Linie erkannt -> in letzter Richtung suchen
@@ -62,7 +59,7 @@ def control_run():
                 motor2.rear_right(speed_2)
 
             else:
-                # wenn nicht sensor rechts oder senosr links erkannt wurde
+                # last_seen_line == "sensor_mitte"
                 motor2.front_left(speed)
                 motor2.front_right(speed)
                 motor2.rear_left(speed)

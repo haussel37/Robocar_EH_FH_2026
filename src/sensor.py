@@ -5,9 +5,6 @@ import motor2
 sensor1 = LineSensor(14)
 sensor2 = LineSensor(15)
 sensor3 = LineSensor(23)
-sensor2.value = 1 : print('Line detected')
-sensor2.value = 0 : print('No line detected')
-sleep(1)
 
 # Sensor rechts
 sensor_right = sensor1
